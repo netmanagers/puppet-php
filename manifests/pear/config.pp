@@ -7,11 +7,11 @@
 #
 define php::pear::config ($value) {
 
-  include php::pear
+  include ::php::pear
 
   exec { "pear-config-set-${name}":
     command => "pear config-set ${name} ${value}",
-    path    => $php::pear::path,
+    path    => $::php::pear::path,
     unless  => "pear config-get ${name} | grep ${value}",
     require => Package['php-pear'],
   }

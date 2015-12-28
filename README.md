@@ -2,7 +2,7 @@
 
 This is a Puppet module for php based on the second generation layout ("NextGen") of Example42 Puppet Modules.
 
-Made by ALessandro Franceschi / Lab42
+ ade by ALessandro Franceschi / Lab42
 
 Official site: http://www.example42.com
 

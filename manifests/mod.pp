@@ -39,10 +39,8 @@ define php::mod (
   $disable              = false,
   $service_autorestart  = '',
   $path                 = '/usr/bin:/bin:/usr/sbin:/sbin',
-  $package              = $php::package
-  ) {
-
-  include php
+  $package              = $::php::package,
+  ) inherits ::php {
 
   if $disable {
     $php_mod_tool = 'php5dismod'
@@ -51,10 +49,10 @@ define php::mod (
   }
 
   $real_service_autorestart = $service_autorestart ? {
-    true    => "Service[${php::service}]",
+    true    => "Service[${::php::service}]",
     false   => undef,
-    ''      => $php::service_autorestart ? {
-      true    => "Service[${php::service}]",
+    ''      => $::php::service_autorestart ? {
+      true    => "Service[${::php::service}]",
       false   => undef,
     }
   }

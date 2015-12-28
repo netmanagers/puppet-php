@@ -15,7 +15,7 @@
 #   If set to "no" it installs the module via pecl command. Default: true
 #
 # [*install_options*]
-#   An array of package manager install options. See $php::install_options
+#   An array of package manager install options. See $::php::install_options
 #
 # [*preferred_state*]
 #   Define which preferred state to use when installing Pear modules via pecl
@@ -39,8 +39,8 @@
 # }
 #
 define php::pecl::module (
-  $service_autorestart = $php::bool_service_autorestart,
-  $service             = $php::service,
+  $service_autorestart = $::php::bool_service_autorestart,
+  $service             = $::php::service,
   $use_package         = 'yes',
   $install_options     = [],
   $preferred_state     = 'stable',
@@ -50,11 +50,11 @@ define php::pecl::module (
   $verbose             = false,
   $version             = '',
   $prefix              = false,
-  $config_file         = $php::config_file) {
+  $config_file         = $::php::config_file) {
 
-  include php
-  include php::pear
-  include php::devel
+  include ::php
+  include ::php::pear
+  include ::php::devel
 
   $manage_service_autorestart = $service_autorestart ? {
     true    => $service ? {
@@ -66,7 +66,7 @@ define php::pecl::module (
   }
 
   $real_install_options = $install_options ? {
-    ''      => $php::install_options,
+    ''      => $::php::install_options,
     default => $install_options,
   }
 
@@ -144,7 +144,7 @@ define php::pecl::module (
         require   => $pecl_exec_require,
         notify    => $manage_service_autorestart,
       }
-      if $php::bool_augeas == true {
+      if $::php::bool_augeas == true {
         php::augeas { "augeas-${name}":
           ensure => $ensure,
           entry  => "PHP/extension[. = \"${name}.so\"]",

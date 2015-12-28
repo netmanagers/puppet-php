@@ -70,7 +70,7 @@ define php::conf (
   include php
 
   $managed_path = $path ? {
-    undef   => "${php::config_dir}/${name}",
+    undef   => "${::php::config_dir}/${name}",
     default => $path,
   }
 

@@ -9,7 +9,7 @@
 # This class is not intended to be used directly.
 # Use it as reference
 #
-class php::spec inherits php {
+class php::spec inherits ::php {
 
   # This just a test to override the arguments of an existing resource
   # Note that you can achieve this same result with just:

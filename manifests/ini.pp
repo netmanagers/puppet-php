@@ -26,9 +26,9 @@ define php::ini (
   $template     = 'php/extra-ini.erb',
   $target       = 'extra.ini',
   $sapi_target  = 'all',
-  $service      = $php::service,
-  $config_dir   = $php::config_dir,
-  $package      = $php::package
+  $service      = $::php::service,
+  $config_dir   = $::php::config_dir,
+  $package      = $::php::package
 ) {
 
   include php

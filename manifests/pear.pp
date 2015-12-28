@@ -22,18 +22,18 @@
 #   Default: true
 #
 # [*install_options*]
-#   An array of package manager install options. See $php::install_options
+#   An array of package manager install options. See $::php::install_options
 #
 class php::pear (
-  $package         = $php::package_pear,
+  $package         = $::php::package_pear,
   $install_package = true,
   $install_options = [],
   $version         = 'present',
   $path            = '/usr/bin:/usr/sbin:/bin:/sbin'
-  ) inherits php {
+  ) inherits ::php {
 
   $real_install_options = $install_options ? {
-    ''      => $php::install_options,
+    ''      => $::php::install_options,
     default => $install_options,
   }
 

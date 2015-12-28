@@ -184,7 +184,7 @@ class php (
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
   $protocol            = params_lookup( 'protocol' )
-  ) inherits php::params {
+  ) inherits ::php::params {
 
   $bool_service_autorestart=any2bool($service_autorestart)
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -196,116 +196,116 @@ class php (
   $bool_audit_only=any2bool($audit_only)
 
   ### Definition of some variables used in the module
-  $manage_package = $php::bool_absent ? {
+  $manage_package = $::php::bool_absent ? {
     true  => 'absent',
-    false => $php::version,
+    false => $::php::version,
   }
 
-  $manage_file = $php::bool_absent ? {
+  $manage_file = $::php::bool_absent ? {
     true    => 'absent',
     default => 'present',
   }
 
-  if $php::bool_absent == true {
+  if $::php::bool_absent == true {
     $manage_monitor = false
   } else {
     $manage_monitor = true
   }
 
-  $manage_audit = $php::bool_audit_only ? {
+  $manage_audit = $::php::bool_audit_only ? {
     true  => 'all',
     false => undef,
   }
 
-  $manage_file_replace = $php::bool_audit_only ? {
+  $manage_file_replace = $::php::bool_audit_only ? {
     true  => false,
     false => true,
   }
 
-  if ($php::source != '' and $php::source != false and $php::template != '' and
-  $php::template != false) {
+  if ($::php::source != '' and $::php::source != false and $::php::template != '' and
+  $::php::template != false) {
     fail ('PHP: cannot set both source and template')
   }
-  if ($php::source != '' and $php::source != false and $php::bool_augeas) {
+  if ($::php::source != '' and $::php::source != false and $::php::bool_augeas) {
     fail ('PHP: cannot set both source and augeas')
   }
-  if ($php::template != '' and $php::template != false and $php::bool_augeas) {
+  if ($::php::template != '' and $::php::template != false and $::php::bool_augeas) {
     fail ('PHP: cannot set both template and augeas')
   }
 
-  $manage_file_source = $php::source ? {
+  $manage_file_source = $::php::source ? {
     ''        => undef,
-    default   => $php::source,
+    default   => $::php::source,
   }
 
-  $manage_file_content = $php::template ? {
+  $manage_file_content = $::php::template ? {
     ''        => undef,
-    default   => template($php::template),
+    default   => template($::php::template),
   }
 
   $realservice_autorestart = $bool_service_autorestart ? {
-    true  => Service[$php::service],
+    true  => Service[$::php::service],
     false => undef,
   }
 
   ### Managed resources
-  package { $php::package:
-    ensure          => $php::manage_package,
-    install_options => $php::install_options,
+  package { $::php::package:
+    ensure          => $::php::manage_package,
+    install_options => $::php::install_options,
   }
 
   file { 'php.conf':
-    ensure  => $php::manage_file,
-    path    => $php::config_file,
-    mode    => $php::config_file_mode,
-    owner   => $php::config_file_owner,
-    group   => $php::config_file_group,
-    require => Package[$php::package],
-    source  => $php::manage_file_source,
-    content => $php::manage_file_content,
-    replace => $php::manage_file_replace,
-    audit   => $php::manage_audit,
+    ensure  => $::php::manage_file,
+    path    => $::php::config_file,
+    mode    => $::php::config_file_mode,
+    owner   => $::php::config_file_owner,
+    group   => $::php::config_file_group,
+    require => Package[$::php::package],
+    source  => $::php::manage_file_source,
+    content => $::php::manage_file_content,
+    replace => $::php::manage_file_replace,
+    audit   => $::php::manage_audit,
     notify  => $realservice_autorestart,
   }
 
   # The whole php configuration directory can be recursively overriden
-  if $php::source_dir != '' and $php::source_dir != false {
+  if $::php::source_dir != '' and $::php::source_dir != false {
     file { 'php.dir':
       ensure  => directory,
-      path    => $php::config_dir,
-      require => Package[$php::package],
-      source  => $php::source_dir,
+      path    => $::php::config_dir,
+      require => Package[$::php::package],
+      source  => $::php::source_dir,
       recurse => true,
       links   => follow,
-      purge   => $php::bool_source_dir_purge,
-      force   => $php::bool_source_dir_purge,
-      replace => $php::manage_file_replace,
-      audit   => $php::manage_audit,
+      purge   => $::php::bool_source_dir_purge,
+      force   => $::php::bool_source_dir_purge,
+      replace => $::php::manage_file_replace,
+      audit   => $::php::manage_audit,
     }
   }
 
 
   ### Include custom class if $my_class is set
-  if $php::my_class != '' and  $php::my_class != false {
-    include $php::my_class
+  if $::php::my_class != '' and  $::php::my_class != false {
+    include $::php::my_class
   }
 
 
   ### Provide puppi data, if enabled ( puppi => true )
-  if $php::bool_puppi == true {
+  if $::php::bool_puppi == true {
     $classvars=get_class_args()
     puppi::ze { 'php':
-      ensure    => $php::manage_file,
+      ensure    => $::php::manage_file,
       variables => $classvars,
-      helper    => $php::puppi_helper,
+      helper    => $::php::puppi_helper,
     }
   }
 
 
   ### Debugging, if enabled ( debug => true )
-  if $php::bool_debug == true {
+  if $::php::bool_debug == true {
     file { 'debug_php':
-      ensure  => $php::manage_file,
+      ensure  => $::php::manage_file,
       path    => "${settings::vardir}/debug-php",
       mode    => '0640',
       owner   => 'root',

@@ -51,10 +51,10 @@ define php::module (
   $service_autorestart = '',
   $module_prefix       = '',
   $absent              = '',
-  $package             = $php::package
+  $package             = $::php::package
   ) {
 
-  include php
+  include ::php
 
   if $absent != '' and $absent != false {
     $real_version = 'absent'
@@ -63,21 +63,21 @@ define php::module (
   }
 
   $real_service_autorestart = $service_autorestart ? {
-    true    => "Service[${php::service}]",
+    true    => "Service[${::php::service}]",
     false   => undef,
     ''      => $php::service_autorestart ? {
-      true    => "Service[${php::service}]",
+      true    => "Service[${::php::service}]",
       false   => undef,
     }
   }
 
   $real_module_prefix = $module_prefix ? {
-    ''      => $php::module_prefix,
+    ''      => $::php::module_prefix,
     default => $module_prefix,
   }
 
   $real_install_options = $install_options ? {
-    ''      => $php::install_options,
+    ''      => $::php::install_options,
     default => $install_options,
   }
 
