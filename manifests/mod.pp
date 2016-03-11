@@ -44,12 +44,6 @@ define php::mod (
 
   include php
 
-  if $disable {
-    $php_mod_tool = 'php5dismod'
-  } else {
-    $php_mod_tool = 'php5enmod'
-  }
-
   $real_service_autorestart = $service_autorestart ? {
     true    => "Service[${php::service}]",
     false   => undef,
@@ -59,11 +53,28 @@ define php::mod (
     }
   }
 
-  exec { "php_mod_tool_${name}":
-    command => "${php_mod_tool} ${name}",
-    path    => $path,
-    notify  => $real_service_autorestart,
-    require => Package[$package],
-  }
+  if $::operatingsystem == 'Debian'
+    or $::operatingsystem == 'Ubuntu'
+    or $::operatingsystem == 'Mint' {
+      case $::ensure {
+        'present': {
 
+          exec { "/usr/sbin/php5enmod ${name}":
+            unless  => "/usr/sbin/php5query -s apache2 -m ${name} | /bin/grep -qi enabled",
+            path    => $path,
+            notify  => $real_service_autorestart,
+            require => Package[$package],
+          }
+                                                                                                                                                      }
+        'absent': {
+          exec { "/usr/sbin/php5dismod ${name}":
+            onlyif  => "/usr/sbin/php5query -s apache2 -m ${name} | /bin/grep -qi enabled",
+            path    => $path,
+            notify  => $real_service_autorestart,
+            require => Package[$package],
+          }
+        }
+        default: { }
+      }
+    }
 }
