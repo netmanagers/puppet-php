@@ -53,7 +53,7 @@ class php::params {
 
   $config_dir = $::operatingsystem ? {
     /(?i:SLES|OpenSuSE)/      => '/etc/php5',
-    /(?i:Ubuntu|Debian|Mint)/ => '/etc/php',
+    /(?i:Ubuntu|Debian|Mint)/ => '/etc/php/7.0',
     default                   => '/etc/php.d',
   }
 
