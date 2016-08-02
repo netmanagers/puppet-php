@@ -15,7 +15,7 @@
 class php::params {
 
   $package_devel = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint)/ => 'php5-dev',
+    /(?i:Ubuntu|Debian|Mint)/ => 'php-dev',
     /(?i:SLES|OpenSuSe)/      => 'php5-devel',
     default                   => 'php-devel',
   }
@@ -28,8 +28,8 @@ class php::params {
 
   ### Application related parameters
   $module_prefix = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint|SLES|OpenSuSE)/ => 'php5-',
-    default                                 => 'php-',
+    /(?i:SLES|OpenSuSE)/ => 'php5-',
+    default              => 'php-',
   }
 
   $pear_module_prefix = $::operatingsystem ? {
@@ -40,7 +40,6 @@ class php::params {
   }
 
   $package = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint)/ => 'php5',
     /(?i:SLES|OpenSuSE)/      => [ 'php5','apache2-mod_php5'],
     default                   => 'php',
   }
@@ -53,13 +52,15 @@ class php::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint|SLES|OpenSuSE)/ => '/etc/php5',
-    default                                   => '/etc/php.d',
+    /(?i:SLES|OpenSuSE)/      => '/etc/php5',
+    /(?i:Ubuntu|Debian|Mint)/ => '/etc/php',
+    default                   => '/etc/php.d',
   }
 
   $config_file = $::operatingsystem ? {
-    /(?i:Ubuntu|Debian|Mint|SLES|OpenSuSE)/ => '/etc/php5/apache2/php.ini',
-    default                                 => '/etc/php.ini',
+    /(?i:SLES|OpenSuSE)/      => '/etc/php5/apache2/php.ini',
+    /(?i:Ubuntu|Debian|Mint)/ => '/etc/php/7.0/apache2/php.ini',
+    default                   => '/etc/php.ini',
   }
 
   $config_file_mode = $::operatingsystem ? {

@@ -73,8 +73,8 @@ define php::pecl::module (
   case $prefix {
       false: {
         $real_package_name = $::operatingsystem ? {
-          ubuntu  => "php5-${name}",
-          debian  => "php5-${name}",
+          ubuntu  => "php-${name}",
+          debian  => "php-${name}",
           default => "php-${name}",
       }
     }

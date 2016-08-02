@@ -57,15 +57,15 @@ define php::mod (
     or $::operatingsystem == 'Ubuntu'
     or $::operatingsystem == 'Mint' {
       if $disable {
-        exec { "/usr/sbin/php5dismod ${name}":
-          onlyif  => "/usr/sbin/php5query -s apache2 -m ${name} | /bin/grep -qi enabled",
+        exec { "/usr/sbin/phpdismod ${name}":
+          onlyif  => "/usr/sbin/phpquery -s apache2 -m ${name} | /bin/grep -qi enabled",
           path    => $path,
           notify  => $real_service_autorestart,
           require => Package[$package],
         }
       } else {
-        exec { "/usr/sbin/php5enmod ${name}":
-          unless  => "/usr/sbin/php5query -s apache2 -m ${name} | /bin/grep -qi enabled",
+        exec { "/usr/sbin/phpenmod ${name}":
+          unless  => "/usr/sbin/phpquery -s apache2 -m ${name} | /bin/grep -qi enabled",
           path    => $path,
           notify  => $real_service_autorestart,
           require => Package[$package],
